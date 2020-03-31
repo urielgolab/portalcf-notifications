@@ -1,26 +1,49 @@
+/// <reference path="./Notification/Notification.d.ts" />
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Header } from './Components/Header';
+import NotificationList from './Notification/NotificationListComponent';
+import { NotificationService } from './Notification/NotificationService';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface AppState {
+  filterText: string,
+  notifications?: NotificationPortal[]
+}
+
+class App extends React.Component<{}, AppState> {
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      filterText: '',
+      notifications: [],
+    };
+  }
+
+  componentDidMount() {
+    this.setState({
+        notifications: new NotificationService().getNotifications()
+    });
+  }
+
+  filterText(term: any) {
+    this.setState({ filterText: term.target.value })
+  }
+
+
+  render () {
+    console.log(this.state.notifications);
+    return (
+      <Container fluid>
+          <Header Title="Portal de notificaciones" onFilterText={ (term: string) => this.filterText(term) } />
+        <Row>
+          <NotificationList notifications={this.state.notifications} filterText={this.state.filterText} />
+        </Row>
+      </Container>
+    );
+  } 
 }
 
 export default App;
