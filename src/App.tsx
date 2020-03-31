@@ -2,14 +2,15 @@
 import React from 'react';
 import './App.css';
 import { Header } from './Components/Header';
-import NotificationList from './Notification/NotificationListComponent';
+// import NotificationList from './Notification/NotificationListComponent';
 import { NotificationService } from './Notification/NotificationService';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
+import TestDanComponent from './Notification/TestDanComponent'
 
 interface AppState {
   filterText: string,
-  notifications?: NotificationPortal[]
+  notifications: NotificationPortal[]
 }
 
 class App extends React.Component<{}, AppState> {
@@ -34,12 +35,16 @@ class App extends React.Component<{}, AppState> {
 
 
   render () {
-    console.log(this.state.notifications);
     return (
       <Container fluid>
           <Header Title="Portal de notificaciones" onFilterText={ (term: string) => this.filterText(term) } />
         <Row>
-          <NotificationList notifications={this.state.notifications} filterText={this.state.filterText} />
+          {/* {
+            (this.state.notifications.length > 0) && (
+              <NotificationList notifications={this.state.notifications} filterText={this.state.filterText} />
+            )
+          } */}
+          <TestDanComponent notifications={this.state.notifications} filterText={this.state.filterText}/>
         </Row>
       </Container>
     );
