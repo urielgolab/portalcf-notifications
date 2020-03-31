@@ -17,7 +17,9 @@ const NotificationList = (props: NotificationListProps) => {
     let term = props.filterText.toLocaleLowerCase();
 
     return(
-        notifications && notifications
+        <div>
+        {
+            notifications && notifications
             .filter(notification => { return notification.title.toLowerCase().includes(term) })
             .map((notification, idx) => (
                 <Container style={{paddingTop: '20px'}}>
@@ -48,7 +50,9 @@ const NotificationList = (props: NotificationListProps) => {
                         </Col>
                     </Row>
                 </Container>
-        ))
+            ))
+        }
+        </div>
     );
 }
 
