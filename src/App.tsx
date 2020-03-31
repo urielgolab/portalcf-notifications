@@ -39,11 +39,9 @@ class App extends React.Component<{}, AppState> {
       <Container fluid>
           <Header Title="Portal de notificaciones" onFilterText={ (term: string) => this.filterText(term) } />
         <Row>
-          {/* {
-            (this.state.notifications.length > 0) && (
-              <NotificationList notifications={this.state.notifications} filterText={this.state.filterText} />
-            )
-          } */}
+          {/* 
+          <NotificationList notifications={this.state.notifications} filterText={this.state.filterText} />
+           */}
           <TestDanComponent notifications={this.state.notifications} filterText={this.state.filterText}/>
         </Row>
       </Container>
