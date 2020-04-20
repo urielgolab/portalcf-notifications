@@ -1,36 +1,32 @@
-/// <reference path="./Notification.d.ts" />
-import { ApiService } from "../Common/ApiService";
+import axios from 'axios';
+import {Config} from '../Common/Constants';
 
-export class NotificationService extends ApiService {
 
-    getNotifications(): NotificationPortal[] {
-        // fetch('')
-        // .then((data) => {
-        //     return data.json();
-        // })
-        // .catch((error) => {
-        //     console.log(error);
-        // });
+const baseUrl = Config.REACT_APP_API_BASE_URL; //TODO: process.env.REACT_APP_API_BASE_URL;
 
-        return [
-            {
-                to: 20319823973,
-                from: 20319823973,
-                text: 'Notificacion 1',
-                title: 'Titulo 1',
-                type: 'text',
-                sent: new Date(),
-                read: undefined,
-            },
-            {
-                to: 20319823973,
-                from: 20319823973,
-                text: 'Notificacion 2',
-                title: 'Titulo 2',
-                type: 'text',
-                sent: new Date(),
-                read: new Date(),
-            }        
-        ];
+export async function getNotifications () {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/notification`,
+            method: 'GET'
+        })
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function postNotification (notification: any) {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/notification`,
+            method: 'POST',
+            data: notification
+        })
+
+        return response;
+    } catch (error) {
+        return false;
     }
 }

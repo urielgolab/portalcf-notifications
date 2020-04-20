@@ -1,27 +1,43 @@
 /// <reference path="./Notification.d.ts" />
-import React from 'react';
-import Card from 'react-bootstrap/Card'
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col';
-
-enum Colors {'primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark', 'light'};
+import React, {useState, useEffect} from 'react';
+import { Card, Container, Row, Col } from 'react-bootstrap';
+import { getNotifications } from './NotificationService';
+import { formatDate } from '../Common/Date';
 
 interface NotificationListProps { 
-    notifications?: NotificationPortal[] | undefined,
+    notifications: NotificationPortal[],
     filterText: string,
  }
 
 const NotificationList = (props: NotificationListProps) => {    
-    let notifications = props.notifications;
     let term = props.filterText.toLocaleLowerCase();
+    const [ notifications, setNotifications ] = useState<Array<NotificationPortal>>([]);
+
+    useEffect(() => {
+        async function loadNotifications() {
+            try {
+                const response = await getNotifications();
+                if(response?.status === 200) {
+                    setNotifications(response.data);
+                }
+                return response;
+            } catch (error) {
+                setNotifications([{to: 1, from: 1,title: 'error',text: 'Error', sent: new Date(), type: 0}]);
+                // alert('Error al conectarse con el servidor');
+            }
+        }
+
+        loadNotifications();
+    }, []);
 
     return(
-        notifications && notifications
+        <Container> 
+        {
+            notifications
             .filter(notification => { return notification.title.toLowerCase().includes(term) })
             .map((notification, idx) => (
-                <Container style={{paddingTop: '20px'}}>
-                    <Row key={idx}>
+                <Container key={idx}>
+                    <Row>
                         <Col>
                         <>
                             <Card
@@ -35,13 +51,13 @@ const NotificationList = (props: NotificationListProps) => {
                                 <Card.Body>
                                 {/* <Card.Title>{notification.title}</Card.Title> */}
                                     <Card.Text>
-                                        {notification.text}
+                                        <p>{notification.text}</p>
+                                        <small>
+                                            <b>Fecha: </b> {formatDate(notification.sent)} 
+                                            {notification.read && (<><b>- Leído:</b> {formatDate(notification.read)} </>)}
+                                        </small>
                                     </Card.Text>
                                 </Card.Body>
-                                <Card.Footer className={'notificationFooter'}>
-                                    <b>Fecha: </b> {notification.sent.toLocaleString()} 
-                                    {notification.read && (<><b>- Leído:</b> {notification.read.toLocaleString()} </>)}
-                                </Card.Footer>
                             </Card>
                             <br />
                         </>
@@ -49,6 +65,8 @@ const NotificationList = (props: NotificationListProps) => {
                     </Row>
                 </Container>
         ))
+        }
+        </Container>
     );
 }
 

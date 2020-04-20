@@ -3,13 +3,14 @@ import React from 'react';
 import './App.css';
 import { Header } from './Components/Header';
 import NotificationList from './Notification/NotificationListComponent';
-import { NotificationService } from './Notification/NotificationService';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row'
+// import { NotificationService } from './Notification/NotificationService';
+import {Container, Row } from 'react-bootstrap';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import NotificationPost from './NotificationPost/NotificationPost';
 
 interface AppState {
   filterText: string,
-  notifications?: NotificationPortal[]
+  notifications: NotificationPortal[]
 }
 
 class App extends React.Component<{}, AppState> {
@@ -22,26 +23,25 @@ class App extends React.Component<{}, AppState> {
     };
   }
 
-  componentDidMount() {
-    this.setState({
-        notifications: new NotificationService().getNotifications()
-    });
-  }
-
   filterText(term: any) {
     this.setState({ filterText: term.target.value })
   }
 
-
   render () {
-    console.log(this.state.notifications);
     return (
-      <Container fluid>
-          <Header Title="Portal de notificaciones" onFilterText={ (term: string) => this.filterText(term) } />
-        <Row>
-          <NotificationList notifications={this.state.notifications} filterText={this.state.filterText} />
-        </Row>
-      </Container>
+      <Router>
+        <Container fluid>
+            <Header Title="Portal de notificaciones" onFilterText={ (term: string) => this.filterText(term) } />
+            <Row style={{paddingTop: '20px'}}>
+              <Switch>
+                  <Route exact path="/"
+                    render={(props) => <NotificationList notifications={this.state.notifications} filterText={this.state.filterText} /> }
+                  />
+                  <Route path="/post" component={NotificationPost} />
+              </Switch>
+            </Row>
+        </Container>
+      </Router>
     );
   } 
 }

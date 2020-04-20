@@ -3,7 +3,7 @@ type NotificationPortal = {
     from: number,
     text: string,
     title: string,
-    type: string,
+    type: number,
     sent: Date,
     read?: Date,
 }
